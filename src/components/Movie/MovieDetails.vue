@@ -31,7 +31,7 @@
                         </div>
                         <!-- Movie Add New Rating Button and Dialog -->
                         <div>
-                            // add rating dialog
+                            <MovieRatingDialog />
                         </div>
                         <!-- Movie Description and Edit Description -->
                         <div class="d-flex align-center mt-5">
@@ -77,12 +77,16 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
+import MovieRatingDialog from '@/components/Movie/MovieRatingDialog.vue'
 export default {
     data() {
         return {
             isDescriptionEdit: false,
             newDescription: ''
         }
+    },
+    components:{
+        MovieRatingDialog
     },
     computed: {
         ...mapState(['movies']),
@@ -96,7 +100,7 @@ export default {
     },
     methods: {
         ...mapActions(['fetchMovies']),
-        toggleDescriptionEdit(){
+        toggleDescriptionEdit() {
             this.isDescriptionEdit = !this.isDescriptionEdit
         },
         cancelDescriptionEdit() {
