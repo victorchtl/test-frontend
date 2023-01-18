@@ -1,13 +1,7 @@
-<template lang="">
-    <div>
-        
-    </div>
-</template>
-<script>
-export default {
-    
-}
-</script>
-<style lang="">
-    
-</style>
+<template>
+    <MovieDetails />
+  </template>
+  
+  <script setup>
+    import MovieDetails from '@/components/Movie/MovieDetails.vue'
+  </script>

@@ -1,12 +1,14 @@
 <template lang="">
-    <v-main v-if="movies.count > 0">
+    <v-main>
         <v-container>
             <v-row justify='center'>
+                <!-- spacing -->
                 <v-col
                     class="mt-2"
                     cols="12"
                 >
                 </v-col>
+                <!-- images carousel -->
                 <v-col
                     v-for="movie in movies.results"
                     :key="`${movie}`"
@@ -18,6 +20,7 @@
                 </v-col>
             </v-row>
         </v-container>
+        <!-- Pagination -->
         <div class="text-center mt-10">
             <v-pagination
             size="30px"
@@ -25,15 +28,6 @@
             :length="totalPages"
             ></v-pagination>
         </div>
-    </v-main>
-    <v-main v-else>
-        <v-container>
-            <div class="d-flex justify-center">
-                <p>
-                    No Movies available
-                </p>
-            </div>
-        </v-container>
     </v-main>
 </template>
 <script>
@@ -43,6 +37,11 @@ import MovieCard from '@/components/shared/MovieCard.vue'
 export default {
     components: {
         MovieCard
+    },
+    watch: {
+        currentPageState(newVal) {
+            this.updateMoviesPage(newVal)
+        }
     },
     computed: {
         ...mapState(['movies', 'currentPage']),
