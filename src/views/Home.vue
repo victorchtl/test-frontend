@@ -1,7 +1,7 @@
 <template>
-  <HelloWorld />
+  <HomeMoviesPagination />
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+  import HomeMoviesPagination from '@/components/Home/HomeMoviesPagination.vue'
 </script>
