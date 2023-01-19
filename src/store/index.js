@@ -5,12 +5,17 @@ export default createStore({
     state: {
         movies: [],
         currentPage: 1,
-        actors:[]
+        actors:[],
+        error: {
+            isError:false,
+            message:''
+        },
     },
     mutations: {
         setMovies: (state, data) => (state.movies = data),
         setCurrentPage: (state, page) => (state.currentPage = page),
         setActors: (state, data) => (state.actors = data),
+        setError: (state, data) => (state.error = data),
     },
     actions: {
         // Retrieve All Movies by pages of 5 items
@@ -20,6 +25,7 @@ export default createStore({
                 commit('setMovies', response.data);
             } catch (error) {
                 console.error(error);
+                commit('setError', error);
             }
         },
         // Update current home pagination
@@ -45,8 +51,12 @@ export default createStore({
                     }
                 }
             } catch (error) {
+                commit('setError', error);
                 console.log(error)
             }
+        },
+        updateError({ commit }, data) {
+            commit('setError', data)
         },
     }
 })

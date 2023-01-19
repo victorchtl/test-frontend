@@ -88,7 +88,7 @@ import { mapState, mapActions } from 'vuex'
 import MovieRatingDialog from '@/components/Movie/MovieRatingDialog.vue'
 import MovieActorsDialog from '@/components/Movie/MovieActorsDialog.vue'
 import ActorCard from '@/components/shared/ActorCard.vue'
-import updateMovie from '@/services/api.service.js'
+import {updateMovie} from '@/services/api.service.js'
 export default {
     data() {
         return {
@@ -115,7 +115,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['fetchMovies', 'fetchActors']),
+        ...mapActions(['fetchMovies', 'fetchActors', 'updateError']),
         toggleDescriptionEdit() {
             this.isDescriptionEdit = !this.isDescriptionEdit
         },
@@ -129,13 +129,18 @@ export default {
                 await updateMovie(id, { description: this.newDescription })
             } catch (e) {
                 this.updateError({ isError: true, message: e.message })
+                this.isDescriptionEdit = false
                 console.log(e)
             }
         }
     },
     mounted() {
         this.fetchActors()
+        this.newDescription = this.movieDetails.description
     },
+    beforeUnmount() {
+        this.updateError({ isError: false, message: '' })
+    }
 }
 </script>
 <style lang="">

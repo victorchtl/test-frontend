@@ -65,7 +65,7 @@ export default {
         ...mapState(['currentPage']),
     },
     methods: {
-        ...mapActions(['fetchMovies']),
+        ...mapActions(['fetchMovies', 'updateError']),
         async addNewRating() {
             try {
                 const newRatingData = {
@@ -75,8 +75,9 @@ export default {
                 await postRating(newRatingData)
                 this.fetchMovies(this.currentPage)
                 this.closeDialog()
-            } catch (error) {
-                console.log(error)
+            } catch (e) {
+                console.log(e)
+                this.updateError({ isError: true, message: e.message })
             }
         },
         resetNewRating() {

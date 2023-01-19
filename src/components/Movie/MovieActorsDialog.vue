@@ -97,7 +97,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['fetchMovies']),
+        ...mapActions(['fetchMovies', 'updateError']),
 
         async updateMovieActors() {
             try {
@@ -108,11 +108,12 @@ export default {
                 await updateMovie(id, newActorsData)
                 this.fetchMovies(this.currentPage)
                 this.closeDialog()
-            } catch (error) {
-                console.log(error)
+            } catch (e) {
+                console.log(e)
                 this.actorsToRemove = this.actors.filter(object => this.movieDetails.actors.includes(object.id))
                 this.actorsToAdd = this.actors.filter(object => !this.movieDetails.actors.includes(object.id))
                 this.closeDialog()
+                this.updateError({ isError: true, message: e.message })
             }
         },
         closeDialog() {
