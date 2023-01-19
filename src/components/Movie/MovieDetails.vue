@@ -21,7 +21,7 @@
                                 {{movieDetails.title}}
                             </p>
                             <v-rating
-                                v-model="rating"
+                                v-model="movieRating"
                                 density="compact"
                                 color="primary"
                                 size="small"
@@ -34,13 +34,13 @@
                             <MovieRatingDialog />
                         </div>
                         <!-- Movie Description and Edit Description -->
-                        <div class="d-flex align-center mt-5">
-                            <p class="font-weight-regular text-overline mr-2">
+                        <div class="d-flex align-center mt-5 mb-2">
+                            <p class="font-weight-regular text-overline mr-1">
                                 Resume
                             </p>
                             <v-btn
                                 v-if="!isDescriptionEdit"
-                                :style="{ 'font-size': '10px', 'padding':'4px' }"
+                                :style="{ 'font-size': '7px', 'padding':'4px' }"
                                 icon="mdi-pencil"
                                 color="primary"
                                 size="extrasmall"
@@ -66,9 +66,17 @@
                             </div>
                         </div>
                         <!-- Movie Actors -->
-                        <p class="font-weight-regular text-overline mt-5">
-                            Actors
-                        </p>
+                        <div class="d-flex align-center mt-5 mb-2">
+                            <p class="font-weight-regular text-overline mr-1">
+                                Actors
+                            </p>
+                            <MovieActorsDialog />
+                        </div>
+                        <v-row>
+                            <v-col v-for="actor in movieActors" :key="actor.id" cols="1">
+                                <ActorCard :firstName="actor.first_name" :lastName="actor.last_name"/>
+                            </v-col>
+                        </v-row>
                     </div>      
                 </v-col>
             </v-row>
@@ -78,6 +86,9 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import MovieRatingDialog from '@/components/Movie/MovieRatingDialog.vue'
+import MovieActorsDialog from '@/components/Movie/MovieActorsDialog.vue'
+import ActorCard from '@/components/shared/ActorCard.vue'
+import updateMovie from '@/services/api.service.js'
 export default {
     data() {
         return {
@@ -85,21 +96,26 @@ export default {
             newDescription: ''
         }
     },
-    components:{
-        MovieRatingDialog
+    components: {
+        MovieRatingDialog,
+        ActorCard,
+        MovieActorsDialog
     },
     computed: {
-        ...mapState(['movies']),
+        ...mapState(['movies', 'actors']),
         movieDetails() {
             const id = this.$route.params.id
             return this.movies.results.find(obj => obj.id == id)
         },
-        rating() {
+        movieRating() {
             return parseFloat(this.movieDetails.avg_grade)
+        },
+        movieActors() {
+            return this.actors.filter(object => this.movieDetails.actors.includes(object.id));
         }
     },
     methods: {
-        ...mapActions(['fetchMovies']),
+        ...mapActions(['fetchMovies', 'fetchActors']),
         toggleDescriptionEdit() {
             this.isDescriptionEdit = !this.isDescriptionEdit
         },
@@ -107,9 +123,18 @@ export default {
             this.newDescription = this.movieDetails.description
             this.toggleDescriptionEdit()
         },
-        updateDescription() {
-
+        async updateDescription() {
+            try {
+                const id = this.$route.params.id
+                await updateMovie(id, { description: this.newDescription })
+            } catch (e) {
+                this.updateError({ isError: true, message: e.message })
+                console.log(e)
+            }
         }
+    },
+    mounted() {
+        this.fetchActors()
     },
 }
 </script>
